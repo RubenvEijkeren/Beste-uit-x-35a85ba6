@@ -1,6 +1,11 @@
 <?php
 session_start();
-if (isset($_GET["number"])) {
+if(isset($_GET["reset"])){
+	session_unset();
+	session_destroy();
+	header("Location: game.php");
+}
+elseif (isset($_GET["number"])) {
 	$_SESSION["countmax"] = $_GET["number"];
 	$_SESSION["gameinfo"]["p1"] = 0;
 	$_SESSION["gameinfo"]["p2"] = 0;
@@ -14,7 +19,7 @@ elseif (!isset($_SESSION["countmax"]) && !isset($_SESSION["gameinfo"])){
 		<button type="submit">Start!</button>
 	</form>
 <?php }
-elseif($_SESSION["countmax"] > count($_SESSION["gameinfo"]["p1"]) && $_SESSION["countmax"] > count($_SESSION["gameinfo"]["p2"])){
+elseif($_SESSION["countmax"] > $_SESSION["gameinfo"]["p1"] && $_SESSION["countmax"] > $_SESSION["gameinfo"]["p2"]){
 ?>
 <h1>Steen Papier Schaar</h1>
 <h2>Speler 1: </h2>
@@ -100,10 +105,10 @@ header("Location: game.php");
 }
 else {
 	if ($_SESSION['gameinfo']['p2'] >= $_SESSION["countmax"]) {
-		echo "Player 2 wins";
+		echo 'Player 2 wins<br><a href="game.php?reset">reset</a>';
 	}
 	if ($_SESSION['gameinfo']['p1'] >= $_SESSION["countmax"]) {
-		echo "Player 2 wins";
+		echo 'Player 1 wins<br><a href="game.php?reset">reset</a>';
 	}
 	die();
 }
