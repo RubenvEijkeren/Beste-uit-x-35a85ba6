@@ -2,7 +2,8 @@
 session_start();
 if (isset($_GET["number"])) {
 	$_SESSION["countmax"] = $_GET["number"];
-	$_SESSION["gameinfo"] = array();
+	$_SESSION["gameinfo"]["p1"] = 0;
+	$_SESSION["gameinfo"]["p2"] = 0;
 	header("Location: game.php");
 }
 elseif (!isset($_SESSION["countmax"]) && !isset($_SESSION["gameinfo"])){
@@ -13,7 +14,7 @@ elseif (!isset($_SESSION["countmax"]) && !isset($_SESSION["gameinfo"])){
 		<button type="submit">Start!</button>
 	</form>
 <?php }
-elseif($_SESSION["countmax"] > count($_SESSION["gameinfo"])){
+elseif($_SESSION["countmax"] > count($_SESSION["gameinfo"]["p1"]) && $_SESSION["countmax"] > count($_SESSION["gameinfo"]["p2"])){
 ?>
 <h1>Steen Papier Schaar</h1>
 <h2>Speler 1: </h2>
@@ -66,64 +67,44 @@ $b = $_GET['twee'];
 if ($a == "steen") {
 	if ($b == "steen") {
 		echo "<h1>Het staat gelijk</h1>";
-		array_push($_SESSION["gameinfo"], "gelijk");
 	} elseif ($b == "papier") {
 		echo "<h1>Speler 2 wint!</h1>";
-		array_push($_SESSION["gameinfo"], "2");
+		$_SESSION['gameinfo']['p2']++;
 	} elseif ($b == "schaar") {
 		echo "<h1>Speler 1 wint!</h1>";
-		array_push($_SESSION["gameinfo"], "1");
+		$_SESSION['gameinfo']['p1']++;
 	}
 } elseif ($a == "papier") {
 	if ($b == "steen") {
 		echo "<h1>Speler 1 wint!</h1>";
-		array_push($_SESSION["gameinfo"], "1");
+		$_SESSION['gameinfo']['p1']++;
 	} elseif ($b == "papier") {
 		echo "<h1>Het staat gelijk</h1>";
-		array_push($_SESSION["gameinfo"], "gelijk");
 	} elseif ($b == "schaar") {
 		echo "<h1>Speler 2 wint!</h1>";
-		array_push($_SESSION["gameinfo"], "2");
+		$_SESSION['gameinfo']['p2']++;
 	}
 } elseif ($a == "schaar") {
 	if ($b == "steen") {
 		echo "<h1>Speler 2 wint!</h1>";
-		array_push($_SESSION["gameinfo"], "2");
+		$_SESSION['gameinfo']['p2']++;
 	} elseif ($b == "papier") {
 		echo "<h1>Speler 1 wint!</h1>";
-		array_push($_SESSION["gameinfo"], "1");
+		$_SESSION['gameinfo']['p1']++;
 	} elseif ($b == "schaar") {
 		echo "<h1>Het staat gelijk</h1>";
-		array_push($_SESSION["gameinfo"], "gelijk");
 	}
 }
 header("Location: game.php");
 }
 }
 else {
-	$p1 = 0;
-	$p2 = 0;
-	foreach ($_SESSION["gameinfo"] as $value) {
-		if ($value == "gelijk"){
-			$p1++;
-			$p2++;
-		}
-		elseif ($value == "1") {
-			$p1++;
-		}
-		elseif ($value == "2") {
-			$p2++;
-		}
+	if ($_SESSION['gameinfo']['p2'] >= $_SESSION["countmax"]) {
+		echo "Player 2 wins";
 	}
-	if ($p1 == $p2){
-		$_SESSION["countmax"]++;
-		header("Location: game.php");
+	if ($_SESSION['gameinfo']['p1'] >= $_SESSION["countmax"]) {
+		echo "Player 2 wins";
 	}
-	elseif ($p1 > $p2) {
-		echo "Player 1 won!";
-	}
-	elseif ($p1 < $p2) {
-		echo "Player 2 won!";
-	}
+	die();
 }
 ?>
